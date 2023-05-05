@@ -15,10 +15,10 @@ prob = @flp1;     % Fitness function
 
 %% Algorithm parameters
 Np = 100;                            % Population Size
-T = 1000;                             % No. of iterations
+T = 100;                             % No. of iterations
 
-rng(1,'twister')                % Controlling the random number generator used by rand, randi
-[bestsol,bestfitness,BestFitIter,~,~] = TLBO(prob,lb,ub,Np,T);
+rng(30,'twister')                % Controlling the random number generator used by rand, randi
+[bestsol,bestfitness,BestFitIter, BestFitFE,~,~] = TLBO(prob,lb,ub,Np,T);
 
 Stat(1,1) = min(bestfitness);             % Determining the best fitness function value
 Stat(1,2) = max(bestfitness);             % Determining the worst fitness function value
@@ -34,9 +34,9 @@ for j = 1:T+1
         x(n) = j;
     end
 end
-plot(x,y,'*')
+%plot(x,y,'*')
+plot(BestFitFE)
 hold on
-
-xlabel('Iteration')
+xlabel('Function Evaluations')
 ylabel('Best fitness function value')
 
