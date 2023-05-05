@@ -1,8 +1,9 @@
-function [bestsol,bestfitness,BestFitIter,P,f] = TLBO(prob,lb, ub, Np,T)
+function [bestsol,bestfitness,BestFitIter, BestFitFE, P,f] = TLBO(prob,lb, ub, Np,T)
 
 %% Starting of TLBO
 f = NaN(Np,1);                      % Vector to store the fitness function value of the population members
 BestFitIter = NaN(T+1,1);           % Vector to store the best fitness function value in every iteration
+BestFitFE = NaN(Np+2*Np*T+1, 1);    % Vector to store the best fitnees function value after each function evaluation
 
 D = length(lb);                     % Determining the number of decision variables in the problem
 
@@ -10,6 +11,7 @@ P = repmat(lb,Np,1) + repmat((ub-lb),Np,1).*randi([0 1],Np,D);   % Generation of
 
 for p = 1:Np
     f(p) = prob(P(p,:));            % Evaluating the fitness function of the initial population
+    BestFitFE(p) = min(f);
 end
 
 BestFitIter(1) = min(f);
@@ -32,6 +34,7 @@ for t = 1: T
         Xnew = round(max(lb, Xnew));       % Bounding the violating variables to their lower bound
         
         fnew = prob(Xnew);          % Evaluating the fitness of the newly generated solution
+        BestFitFE(end+1) = min(f);
         
         if (fnew < f(i))            % Greedy selection
             P(i,:) = Xnew;          % Include the new solution in population
@@ -58,6 +61,7 @@ for t = 1: T
         Xnew = round(max(lb, Xnew));       % Bounding the violating variables to their lower bound
         
         fnew = prob(Xnew);          % Evaluating the fitness of the newly generated solution
+        BestFitFE(end+1) = min(f);
         
         if (fnew < f(i))            % Greedy selection
             P(i,:) = Xnew;          % Include the new solution in population
